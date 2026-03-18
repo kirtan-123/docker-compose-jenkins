@@ -1,0 +1,58 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: jaya@123
+      MYSQL_DATABASE: student_db
+      MYSQL_USER: student
+      MYSQL_PASSWORD: student123
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - student_net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  backend:
+    image: student_backend:latest
+    build: ./backend
+    ports:
+      - target: 5000
+        published: 5000
+        protocol: tcp
+        mode: ingress
+    depends_on:
+      - db
+    networks:
+      - student_net
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+
+  frontend:
+    image: nginx:latest
+    ports:
+      - target: 80
+        published: 8080
+        protocol: tcp
+        mode: ingress
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+    networks:
+      - student_net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+volumes:
+  db_data:
+
+networks:
+  student_net:
+    driver: overlay

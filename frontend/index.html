@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-1: #f4f7fb;
+      --bg-2: #e7f7f4;
+      --card: #ffffff;
+      --ink: #16202a;
+      --muted: #5d6a77;
+      --accent: #0b8f7c;
+      --accent-dark: #077263;
+      --line: #d8e1ea;
+      --shadow: 0 24px 55px rgba(12, 31, 48, 0.12);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 12%, #d7f7ef 0%, transparent 45%),
+        radial-gradient(circle at 88% 18%, #d9ecff 0%, transparent 42%),
+        linear-gradient(140deg, var(--bg-1), var(--bg-2));
+      padding: 28px;
+    }
+
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(290px, 380px) minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .card {
+      background: linear-gradient(165deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.86));
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(4px);
+    }
+
+    .form-panel {
+      padding: 26px;
+      animation: slide-up 0.55s ease;
+    }
+
+    .table-panel {
+      padding: 20px;
+      animation: slide-up 0.65s ease;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Sora", sans-serif;
+      font-size: 1.58rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      margin: 10px 0 22px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .field-grid.two {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #41505f;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    input {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 11px;
+      border: 1px solid var(--line);
+      outline: none;
+      font-size: 0.95rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--ink);
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(11, 143, 124, 0.13);
+    }
+
+    .actions {
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button {
+      border: 0;
+      border-radius: 11px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: transform 0.14s ease, background 0.2s ease;
+    }
+
+    .primary {
+      background: linear-gradient(135deg, var(--accent), #19ac95);
+      color: #fff;
+      padding: 11px 16px;
+    }
+
+    .primary:hover {
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, var(--accent-dark), #128d7a);
+    }
+
+    .ghost {
+      background: #edf2f7;
+      color: #2f3b48;
+      padding: 10px 14px;
+    }
+
+    .ghost:hover {
+      transform: translateY(-1px);
+      background: #dfe8f1;
+    }
+
+    .status {
+      margin-top: 12px;
+      min-height: 1.1rem;
+      font-size: 0.9rem;
+      color: #2f4f68;
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .table-header h2 {
+      margin: 0;
+      font-family: "Sora", sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: -0.01em;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #ffffff;
+    }
+
+    table {
+      width: 100%;
+      min-width: 840px;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    thead {
+      background: #f0f5fa;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 12px 13px;
+      border-bottom: 1px solid #edf1f4;
+      white-space: nowrap;
+    }
+
+    th {
+      font-size: 0.78rem;
+      color: #4a5c6f;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    tbody tr {
+      transition: background 0.2s ease;
+    }
+
+    tbody tr:hover {
+      background: #f6fbff;
+    }
+
+    .muted {
+      color: #6f7d8c;
+    }
+
+    @keyframes slide-up {
+      from {
+        transform: translateY(16px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 980px) {
+      body {
+        padding: 16px;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .field-grid.two {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<main class="layout">
+  <section class="card form-panel">
+    <h1>Student Registration</h1>
+    <p class="subtitle">Capture complete student profiles using extended columns such as phone, age, department, city, and enrollment year.</p>
+
+    <form id="studentForm">
+      <div class="field-grid">
+        <div>
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" placeholder="Enter full name" required>
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="Enter email address" required>
+        </div>
+      </div>
+
+      <div class="field-grid two">
+        <div>
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" type="text" placeholder="9876543210">
+        </div>
+        <div>
+          <label for="age">Age</label>
+          <input id="age" name="age" type="number" min="1" max="120" placeholder="20">
+        </div>
+        <div>
+          <label for="department">Department</label>
+          <input id="department" name="department" type="text" placeholder="Computer Science">
+        </div>
+        <div>
+          <label for="city">City</label>
+          <input id="city" name="city" type="text" placeholder="Ahmedabad">
+        </div>
+        <div>
+          <label for="enrollment_year">Enrollment Year</label>
+          <input id="enrollment_year" name="enrollment_year" type="number" min="1990" max="2099" placeholder="2026">
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="primary" type="submit">Add Student</button>
+        <button class="ghost" type="button" id="refreshButton">Refresh Table</button>
+      </div>
+
+      <div class="status" id="statusMessage"></div>
+    </form>
+  </section>
+
+  <section class="card table-panel">
+    <div class="table-header">
+      <h2>Students Data Table</h2>
+      <span class="muted" id="recordCount">0 records</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Age</th>
+            <th>Department</th>
+            <th>City</th>
+            <th>Year</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody id="studentsTableBody">
+          <tr>
+            <td colspan="9" class="muted">Loading students...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script>
+  const API_BASE = "http://localhost:5000";
+  const studentForm = document.getElementById("studentForm");
+  const tableBody = document.getElementById("studentsTableBody");
+  const statusMessage = document.getElementById("statusMessage");
+  const recordCount = document.getElementById("recordCount");
+  const refreshButton = document.getElementById("refreshButton");
+
+  function formatValue(value) {
+    return value === null || value === undefined || value === "" ? "-" : value;
+  }
+
+  function formatDate(dateString) {
+    if (!dateString) {
+      return "-";
+    }
+
+    const date = new Date(dateString);
+    if (Number.isNaN(date.getTime())) {
+      return "-";
+    }
+
+    return date.toLocaleString();
+  }
+
+  function renderRows(students) {
+    if (!students.length) {
+      tableBody.innerHTML = "<tr><td colspan=\"9\" class=\"muted\">No students yet. Add one from the form.</td></tr>";
+      recordCount.textContent = "0 records";
+      return;
+    }
+
+    const rowsHtml = students.map(function (student) {
+      return "<tr>" +
+        "<td>" + formatValue(student.id) + "</td>" +
+        "<td>" + formatValue(student.name) + "</td>" +
+        "<td>" + formatValue(student.email) + "</td>" +
+        "<td>" + formatValue(student.phone) + "</td>" +
+        "<td>" + formatValue(student.age) + "</td>" +
+        "<td>" + formatValue(student.department) + "</td>" +
+        "<td>" + formatValue(student.city) + "</td>" +
+        "<td>" + formatValue(student.enrollment_year) + "</td>" +
+        "<td>" + formatDate(student.created_at) + "</td>" +
+      "</tr>";
+    }).join("");
+
+    tableBody.innerHTML = rowsHtml;
+    recordCount.textContent = students.length + " records";
+  }
+
+  async function loadStudents() {
+    try {
+      const response = await fetch(API_BASE + "/students");
+      if (!response.ok) {
+        throw new Error("Unable to fetch students");
+      }
+
+      const students = await response.json();
+      renderRows(students);
+    } catch (error) {
+      tableBody.innerHTML = "<tr><td colspan=\"9\" class=\"muted\">Could not load data. Make sure backend is running on port 5000.</td></tr>";
+      recordCount.textContent = "0 records";
+    }
+  }
+
+  studentForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    statusMessage.textContent = "Saving student...";
+
+    const formData = new FormData(studentForm);
+    const payload = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch(API_BASE + "/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message || "Could not save student");
+      }
+
+      statusMessage.textContent = "Student added successfully.";
+      studentForm.reset();
+      await loadStudents();
+    } catch (error) {
+      statusMessage.textContent = "Error: " + error.message;
+    }
+  });
+
+  refreshButton.addEventListener("click", function () {
+    loadStudents();
+  });
+
+  loadStudents();
+</script>
+
+</body>
+</html>
